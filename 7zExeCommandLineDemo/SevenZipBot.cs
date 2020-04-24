@@ -25,10 +25,10 @@ namespace _7zExeCommandLineDemo
         #region innerClass
         public enum DuplicateOperate
         {
-            Overwrite,  // -aoa表示直接覆盖现有文件，且没有提示。类似的还有：
-            Skip,       // -aos跳过现有文件不会覆盖
-            Rename,     // -aou如果相同文件名的文件已存在，将自动重命名被释放的文件
-            RenameOld   // -aot如果相同文件名的文件已存在，将自动重命名现有的文件
+            Overwrite,  // -aoa means to directly overwrite the existing file without prompting. Similar:
+            Skip,       // -aos skip existing files will not be overwritten
+            Rename,     // -aou If a file with the same file name already exists, it will automatically rename the released file
+            RenameOld   // -aot If a file with the same file name already exists, it will automatically rename the existing file
         }
         public class FeedBack<T>
         {
@@ -60,16 +60,16 @@ namespace _7zExeCommandLineDemo
         #endregion
 
         /// <summary>
-        /// 解压文件
-        /// <param> -aoa表示直接覆盖现有文件，且没有提示。类似的还有：</param>
-        /// <param> -aos跳过现有文件不会覆盖</param>
-        /// <param> -aou如果相同文件名的文件已存在，将自动重命名被释放的文件</param>
-        /// <param> -aot如果相同文件名的文件已存在，将自动重命名现有的文件</param>
-        /// </summary>
-        /// <param name="zipFilePath">源文件</param>
-        /// <param name="destPath">目标文件夹</param>
-        /// <param name="Duplicateactor">覆盖时操作选项</param>
-        /// <returns></returns>
+        /// unzip files
+        /// <param> -aoa means to directly overwrite the existing file without prompting. There are similar: </ param>
+        /// <param> -aos will not overwrite existing files if skipped </ param>
+        /// <param> -aou If a file with the same file name already exists, it will automatically rename the released file </ param>
+        /// <param> -aot If a file with the same file name already exists, it will automatically rename the existing file </ param>
+        /// </ summary>
+        /// <param name = "zipFilePath"> source file </ param>
+        /// <param name = "destPath"> target folder </ param>
+        /// <param name = "Duplicateactor"> Operation options when overwriting </ param>
+        /// <returns> </ returns>
         public bool DeCompress(string zipFilePath, string destPath, DuplicateOperate Duplicateactor = DuplicateOperate.Overwrite)
         {
             var operation = string.Empty;
@@ -96,20 +96,20 @@ namespace _7zExeCommandLineDemo
             bool succeeded = false;
             System.DateTime startTime = System.DateTime.Now;
             process.StartInfo.FileName = SEVENZIPEXEFILEPATH;
-            process.StartInfo.UseShellExecute = false;//是否使用操作系统shell启动
-            process.StartInfo.RedirectStandardInput = true;//接受来自调用程序的输入信息
-            process.StartInfo.RedirectStandardOutput = true;//由调用程序获取输出信息
-            process.StartInfo.RedirectStandardError = true;//重定向标准错误输出
-            process.StartInfo.CreateNoWindow = true;//不显示程序窗口
+            process.StartInfo.UseShellExecute = false; // Whether to use the operating system shell to start
+            process.StartInfo.RedirectStandardInput = true; // Accept input information from the calling program
+            process.StartInfo.RedirectStandardOutput = true; // The output information is obtained by the calling program
+            process.StartInfo.RedirectStandardError = true; // Redirect standard error output
+            process.StartInfo.CreateNoWindow = true; // Do not display the program window
             process.StartInfo.Arguments = string.Format(@"x ""{0}"" -o""{1}"" {2}", zipFilePath, destPath, operation);
-            // "x -o""D:\用户目录\下载\0723.zip"" -aoa"
+            // "x -o" "D:\User Directory\Download\0723.zip" "-aoa"
             process.ErrorDataReceived += ErrorDataReceived;
             process.OutputDataReceived += OutputDataReceived;
-            process.Start();//启动程序
+            process.Start(); // Start the program
             process.BeginErrorReadLine();
             process.BeginOutputReadLine();
-            Log.Debug($"SevenZipBot Start ");
-            process.WaitForExit(ProcessTimeOut);//等待程序执行完退出进程  
+            Log.Debug($"SevenZipBot Start");
+            process.WaitForExit(ProcessTimeOut); // Wait for the program to finish and exit the process
             succeeded = (startTime.AddMilliseconds(ProcessTimeOut) > System.DateTime.Now);
 
             process.Close();
@@ -119,10 +119,10 @@ namespace _7zExeCommandLineDemo
         }
 
         /// <summary>
-        /// 获取压缩文件的文件列表
-        /// </summary>
-        /// <param name="Arguments"></param>
-        /// <returns></returns>
+        /// Get the file list of compressed files
+        /// </ summary>
+        /// <param name = "Arguments"> </ param>
+        /// <returns> </ returns>
         public FeedBack<List<FileModel>> GetFileList(string zipFilePath)
         {
             Log.Debug($"SevenZipBot End Arguments:" + zipFilePath);
@@ -133,25 +133,25 @@ namespace _7zExeCommandLineDemo
             bool succeeded = false;
             System.DateTime startTime = System.DateTime.Now;
             process.StartInfo.FileName = SEVENZIPEXEFILEPATH;
-            process.StartInfo.UseShellExecute = false;//是否使用操作系统shell启动
-            process.StartInfo.RedirectStandardInput = true;//接受来自调用程序的输入信息
-            process.StartInfo.RedirectStandardOutput = true;//由调用程序获取输出信息
-            process.StartInfo.RedirectStandardError = true;//重定向标准错误输出
-            process.StartInfo.CreateNoWindow = true;//不显示程序窗口
-            //process.StartInfo.Arguments = @"l ""D:\用户目录\下载\0723.zip""";
+            process.StartInfo.UseShellExecute = false; // Whether to use the operating system shell to start
+            process.StartInfo.RedirectStandardInput = true; // Accept input information from the calling program
+            process.StartInfo.RedirectStandardOutput = true; // The output information is obtained by the calling program
+            process.StartInfo.RedirectStandardError = true; // Redirect standard error output
+            process.StartInfo.CreateNoWindow = true; // Do not display the program window
+            //process.StartInfo.Arguments = @ "l" "D:\User Directory\Download\0723.zip" "";
             process.StartInfo.Arguments = string.Format(@"l ""{0}""", zipFilePath);
             process.ErrorDataReceived += ErrorDataReceived;
             process.OutputDataReceived += OutputDataReceived;
-            process.Start();//启动程序
+            process.Start();//starting program
             process.BeginErrorReadLine();
             process.BeginOutputReadLine();
             Log.Debug($"SevenZipBot Start ");
-            process.WaitForExit(ProcessTimeOut);//等待程序执行完退出进程  
+            process.WaitForExit(ProcessTimeOut);//Wait for the program to finish executing and exit the process  
             succeeded = (startTime.AddMilliseconds(ProcessCheckListTimeOut) > System.DateTime.Now);
             isrunning = true;
             while (isrunning && startTime.AddMilliseconds(ProcessCheckListTimeOut) > System.DateTime.Now)
             {
-                //这里要卡住 不然程序执行太快 获取不到列表 如果列表数量比较大 失败的情况会少一点 3秒足够输出
+                //If you want to get stuck here, otherwise the program will be executed too fast. If you can't get the list, if the number of lists is large, it will be a little less than 3 seconds.
                 System.Threading.Thread.Sleep(300);
             }
             result.Success = succeeded;
@@ -164,7 +164,7 @@ namespace _7zExeCommandLineDemo
 
         private void ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Log.Debug($"pdf 操作 错误信息： {e.Data}");
+            Log.Debug($"pdf Operation Error Message： {e.Data}");
             isrunning = false;
             Process process = sender as Process;
             process.Close();
@@ -172,7 +172,7 @@ namespace _7zExeCommandLineDemo
 
         private void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Log.Debug($"pdf 操作 命令行输出： {e.Data}");
+            Log.Debug($"pdf Action Command line output： {e.Data}");
             Console.WriteLine(e.Data);
             if (!string.IsNullOrEmpty(e.Data))
             {
@@ -200,10 +200,10 @@ namespace _7zExeCommandLineDemo
         //Scanning the drive for archives:
         //1 file, 51964594 bytes(50 MiB)
 
-        //Listing archive: D:\用户目录\下载\dotnet451.zip
+        // Listing archive: D:\User Directory\Download\dotnet451.zip
 
-        //--
-        //Path = D:\用户目录\下载\dotnet451.zip
+        // ---
+        // Path = D:\User Directory\Download\dotnet451.zip
         //Type = zip
         //Physical Size = 51964594
 
